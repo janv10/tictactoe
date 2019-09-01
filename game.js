@@ -1,3 +1,7 @@
+//Author: Jahnvi Patel
+//Enviornment: p5js.org and Visual Studio Code
+//Date: 8/31/19
+
 //create board
 let board = [
   ['', '', ''],
@@ -29,14 +33,6 @@ function checkWinner() {
   //is there a winner?
   let winner = null;
 
-
-  // tie checker
-  if (winner == null && next.length == 0) {
-    return 'tie';
-  } else {
-    return winner;
-  }
-
   // Vertical checker
   for (let i = 0; i < 3; i++) {
     if (equalizer(board[0][i], board[1][i], board[2][i])) {
@@ -58,16 +54,21 @@ function checkWinner() {
   if (equalizer(board[2][0], board[1][1], board[0][2])) {
     winner = board[2][0];
   }
-
+    // tie checker
+    if (winner == null && next.length == 0) {
+      return 'tie';
+    } else {
+      return winner;
+    }
 }
 
 
-//next turn alteration, comp generation
+// Next turn alteration, comp generation
 function nextTurn() {
   let index = floor(random(next.length));
-  let spot = next.splice(index, 1)[0];
-  let i = spot[0];
-  let j = spot[1];
+  let position = next.splice(index, 1)[0];
+  let i = position[0];
+  let j = position[1];
   board[i][j] = players[currentPlayer];
   currentPlayer = (currentPlayer + 1) % players.length;
 }
@@ -89,30 +90,30 @@ function draw() {
     for (let i = 0; i < 3; i++) {
       let x = w * i + w / 2;
       let y = h * j + h / 2;
-      let spot = board[i][j];
+      let position = board[i][j];
       textSize(32);
-      if (spot == players[1]) {
+      if (position == players[1]) {
         noFill();
         ellipse(x, y, w / 2);
-      } else if (spot == players[0]) {
-        let xr = w / 4;
-        line(x - xr, y - xr, x + xr, y + xr);
-        line(x + xr, y - xr, x - xr, y + xr);
+      } else if (position == players[0]) {
+        let xradius = w / 4;
+        line(x - xradius, y - xradius, x + xradius, y + xradius);
+        line(x + xradius, y - xradius, x - xradius, y + xradius);
       }
 
     }
   }
 
-  //Winner analysis
+  //Winner analysis - print results
   let result = checkWinner();
   if (result != null) {
     noLoop();
     let resultP = createP('');
-    resultP.style('font-size', '32pt');
+    resultP.style('font-size', '42pt');
     if (result == 'tie') {
-      resultP.html("Tie!")
+      resultP.html("TIE!")
     } else {
-      resultP.html(`${result} wins!`);
+      resultP.html(`Winner is: ${result}!`);
     }
   } else {
     nextTurn();
