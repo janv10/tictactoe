@@ -6,56 +6,57 @@ let board = [
 ];
 
 //create players
-let players = ['X', 'O'];
 let currentPlayer;
-let available = [];
+let players = ['X', 'O'];
+let next = [];
 
 function setup() {
   createCanvas(400, 400);
-  frameRate(30);
+  frameRate(40);
   currentPlayer = floor(random(players.length));
   for (let j = 0; j < 3; j++) {
     for (let i = 0; i < 3; i++) {
-      available.push([i, j]);
+      next.push([i, j]);
     }
   }
 }
 
-function equals3(a, b, c) {
+function equalizer(a, b, c) {
   return (a == b && b == c && a != '');
 }
 
 function checkWinner() {
-  
   //is there a winner?
   let winner = null;
 
-  // horizontal checker
-  for (let i = 0; i < 3; i++) {
-    if (equals3(board[i][0], board[i][1], board[i][2])) {
-      winner = board[i][0];
-    }
+
+  // tie checker
+  if (winner == null && next.length == 0) {
+    return 'tie';
+  } else {
+    return winner;
   }
 
   // Vertical checker
   for (let i = 0; i < 3; i++) {
-    if (equals3(board[0][i], board[1][i], board[2][i])) {
+    if (equalizer(board[0][i], board[1][i], board[2][i])) {
       winner = board[0][i];
     }
   }
 
-  // Diagonal checker
-  if (equals3(board[0][0], board[1][1], board[2][2])) {
-    winner = board[0][0];
-  }
-  if (equals3(board[2][0], board[1][1], board[0][2])) {
-    winner = board[2][0];
+  // horizontal checker
+  for (let i = 0; i < 3; i++) {
+    if (equalizer(board[i][0], board[i][1], board[i][2])) {
+      winner = board[i][0];
+    }
   }
 
-  if (winner == null && available.length == 0) {
-    return 'tie';
-  } else {
-    return winner;
+  // Diagonal checker
+  if (equalizer(board[0][0], board[1][1], board[2][2])) {
+    winner = board[0][0];
+  }
+  if (equalizer(board[2][0], board[1][1], board[0][2])) {
+    winner = board[2][0];
   }
 
 }
@@ -63,8 +64,8 @@ function checkWinner() {
 
 //next turn alteration, comp generation
 function nextTurn() {
-  let index = floor(random(available.length));
-  let spot = available.splice(index, 1)[0];
+  let index = floor(random(next.length));
+  let spot = next.splice(index, 1)[0];
   let i = spot[0];
   let j = spot[1];
   board[i][j] = players[currentPlayer];
